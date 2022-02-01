@@ -1,0 +1,18 @@
+[Unit]
+Description=ALSA snd-aloop kmod insertion and removal manager
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+KillMode=control-group
+TimeoutStopSec=2
+
+ExecStart=/bin/bash /etc/systemd/system/ALSA-snd-aloop-manager.service.d/ALSA-snd-aloop-manager.sh
+
+ExecStop=-/bin/rm -r /run/ALSA-snd-aloop-manager
+
+ExecStopPost=-/bin/rm -r /run/ALSA-snd-aloop-manager
+
+
+[Install]
+WantedBy=multi-user.target

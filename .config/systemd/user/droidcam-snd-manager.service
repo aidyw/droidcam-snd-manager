@@ -1,0 +1,13 @@
+[Unit]
+Description=Droidcam sound manager. Manage ALSA interface configuration on behalf of droid cam application
+
+StopWhenUnneeded=true
+
+[Service]
+Type=simple
+RemainAfterExit=true
+KillMode=control-group
+
+ExecStart=/bin/bash /home/%u/.config/systemd/user/droidcam-snd-manager.service.d/droidcam-snd-manager.sh %U %u
+
+ExecStopPost=-/bin/bash -c 'if [ -d "/run/user/%U/droidcam-snd-manager" ]; then rm -r /run/user/%U/droidcam-snd-manager; fi'
