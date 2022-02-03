@@ -1,0 +1,6 @@
+SUBSYSTEM!="sound", GOTO="snd_aloop_end"
+ACTION!="change", GOTO="snd_aloop_end"
+
+DRIVERS=="snd_aloop", ENV{PULSE_PROFILE_SET}="snd-aloop.conf", ENV{SOUND_FORM_FACTOR}="", ENV{ID_MODEL_FROM_DATABASE}="ALSA_loopback_%k", ENV{ID_VENDOR_FROM_DATABASE}="ALSA"
+
+LABEL="snd_aloop_end" 

@@ -14,11 +14,11 @@ function timeout_child () {
 }
 
 get_snd_aloop_index () {
-	module_index=$(aplay -l | grep -e '^card' | awk '{ print $2, $3 }' | grep -m 1 -e 'Loopback$' | awk '{ print $1 }' | sed 's/://g')
+	module_index=$(cat /proc/asound/modules | grep -w snd_aloop | awk '{print $1}')
 if [ "$module_index" != "" ]; then	
-	echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: aplay -l reports 'Loopback' device at index: "$module_index >> $logfile
+	echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: ALSA reports snd_aloop module at index: "$module_index >> $logfile
 else
-	echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: aplay -l reports no 'Loopback' device found.">> $logfile
+	echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: ALSA reports no snd_aloop module.">> $logfile
 fi
 }
 
@@ -71,7 +71,7 @@ while true; do
 			echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: Requesting ALSA index." >> $logfile
         		( echo "index" > /run/ALSA-snd-aloop-manager/snd-aloop_response.pipe ) & timeout_child $pipe_TIMEOUT_default
 			read -t $pipe_TIMEOUT_default <>/run/ALSA-snd-aloop-manager/snd-aloop_cmd.pipe
-			if [[ "$REPLY" == [0-9] || "$REPLY" == [1-2][0-9] || "$REPLY" == "30" || "$REPLY" == "31" ]]; then 
+			if [[ "$REPLY" == [0-9] || "$REPLY" == [1-2][0-9] || "$REPLY" == 3[0-1] || "$REPLY" == "any" ]]; then 
 				echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: Received index data: "$REPLY >> $logfile
 				get_snd_aloop_index
 				if [ "$module_index" != "" ]; then
@@ -80,9 +80,14 @@ while true; do
                         	else
                                 	echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: Attempting to insert module" >> $logfile
                                 	echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: using params: index="$REPLY" pcm_substreams=1" >> $logfile
-                                	modprobe ALSA-snd-aloop-manager index=$REPLY pcm_substreams=1 
-                                	if [ $? -eq 0 ]; then
-                                        	echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: Inserted successfully" >> $logfile
+                                	if [ "$REPLY" == "any" ]; then
+						modprobe ALSA-snd-aloop-manager pcm_substreams=1 
+					else
+						modprobe ALSA-snd-aloop-manager index=$REPLY pcm_substreams=1 
+					fi
+					if [ $? -eq 0 ]; then
+						get_snd_aloop_index
+                                        	echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: Inserted successfully at index: "$module_index >> $logfile
                                         	( echo "0" > /run/ALSA-snd-aloop-manager/snd-aloop_response.pipe ) & timeout_child $pipe_TIMEOUT_default
                                 	else
                                         	echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: Module failed to insert." >> $logfile
@@ -98,14 +103,14 @@ while true; do
 			echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: Requesting ALSA index." >> $logfile
 			( echo "index" > /run/ALSA-snd-aloop-manager/snd-aloop_response.pipe ) & timeout_child $pipe_TIMEOUT_default
 			read -t $pipe_TIMEOUT_default <>/run/ALSA-snd-aloop-manager/snd-aloop_cmd.pipe
-                        if [[ "$REPLY" == [0-9] || "$REPLY" == [1-2][0-9] || "$REPLY" == "30" || "$REPLY" == "31" ]]; then
+                        if [[ "$REPLY" == [0-9] || "$REPLY" == [1-2][0-9] || "$REPLY" == 3[0-1] || "$REPLY" == "any" ]]; then
 				echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: Received index data: "$REPLY >> $logfile
                                 get_snd_aloop_index
-				if [ "$module_index" != "$REPLY" ]; then
+				if [[ "$module_index" != "$REPLY" && "$REPLY" != "any" ]]; then
                                         echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: Module does not exist at requested index:"$REPLY". Request aborted." >> $logfile
                                         ( echo "-1" > /run/ALSA-snd-aloop-manager/snd-aloop_response.pipe ) & timeout_child $pipe_TIMEOUT_default
                                 else
-					echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: Module found at index: "$REPLY". Attempting removal." >> $logfile
+					echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: Module found at index: "$module_index". Attempting removal." >> $logfile
 					modprobe -r ALSA-snd-aloop-manager
 					if [ $? -eq 0 ]; then
                                                 echo $(date +"%T.%3N")" ALSA-snd-aloop-manager: Removed successfully" >> $logfile
