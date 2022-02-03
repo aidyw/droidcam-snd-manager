@@ -95,7 +95,7 @@ root@home:modprobe -r snd-aloop
 
 Unfortunately there can be 1 and only 1 snd-aloop module loaded at one time. It owns the kernel module name ‘snd_aloop’. It is possible to load more than one instance of the driver, but it must be compiled with a different module name. Having said this, I’m sure that most users don't make full time use of the snd-aloop module. 
 
-Bottom line, this convoluted solution does allow me to simply fire up DroidCam, have a PulseAudio microphone appear automatically and open, for example, meet.google.com and have it instantly establish connections with video and audio, without any restarts of PulseAudio or command line intervention to get the kernel module in place.
+Bottom line, this convoluted solution does allow me to simply fire up DroidCam, have a PulseAudio microphone appear automatically and open, for example, meet.google.com and have it instantly establish connections with video and audio, without any restarts of PulseAudio or command line intervention to get the kernel module in place and PulseAudio sorce established.
 
 Enjoy!
 
