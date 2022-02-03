@@ -80,6 +80,14 @@ If you wish the service to run at boot time:
 root@home:systemctl enable ALSA-snd-aloop-manager.service
 ```
 
+logs can be found for both the user level and system level systemd service:
+```
+/run/user/<UID>/droidcam-snd-manager/log
+```
+```
+/run/ALSA-snd-aloop-manager/log
+```
+
 Finally, if you want this solution to fully manage the snd-aloop module and PulseAudio, you must ensure that snd-aloop is not already inserted at boot time or remove it explicitly
 ```
 root@home:modprobe -r snd-aloop
