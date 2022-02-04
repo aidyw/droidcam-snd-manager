@@ -29,7 +29,7 @@ User_ID=$1
 
 logfile=/run/user/$User_ID/droidcam-snd-manager/log
 
-pipe_timeout=10
+pipe_timeout=5
 
 
 
