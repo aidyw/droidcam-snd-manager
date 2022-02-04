@@ -54,8 +54,7 @@ If you would like to give it a try feel free. I have uploaded all the files in t
 As described we have five elements:
 
 1:
-DroidCam .desktop file and droidcam.sh for use by Gnome
-User context systemd ‘droidcam-snd-manager.service’ and associated shell script ‘droidcam-snd-manager.sh’ which is located in its drop-in directory.
+DroidCam .desktop file and droidcam.sh for use by Gnome. A user context systemd ‘droidcam-snd-manager.service’ and associated shell script ‘droidcam-snd-manager.sh’ which is located in its drop-in directory.
 
 2:
 Drop-in directory ‘gnome-launched-droidcam.desktop-.scope.d’ containing ‘droidcam-snd-manager.conf’
