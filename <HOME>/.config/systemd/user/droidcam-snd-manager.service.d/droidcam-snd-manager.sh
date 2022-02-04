@@ -175,7 +175,6 @@ logfile=/run/user/$User_ID/droidcam-snd-manager/log
 if [ ! -d "/run/user/$User_ID/droidcam-snd-manager" ]; then mkdir /run/user/$User_ID/droidcam-snd-manager 2>/dev/null; fi
 
 # Using a single pipe to efficiently hold the service through blocking on a 'read' at the end of the script.
-echo $(date +"%T.%3N")" Droidcam-snd-manager: Creating 'exit_hold.pipe' named pipe." >> $logfile
 mkfifo /run/user/$User_ID/droidcam-snd-manager/exit_hold.pipe
 mkfifo /run/user/$User_ID/droidcam-snd-manager/pa_event.pipe
 # Create named pipes to communicate with droidcam.desktop script.
@@ -183,7 +182,6 @@ mkfifo /run/user/$User_ID/droidcam-snd-manager/pa_event.pipe
 # The writes are done in a subshell with a timeout to kill the PID of the subshell. This ensures writes dont block if the receiver does not consume. 
 # The pipes are uni-directional.
 # The exit_hold pipe is used simply to stop the script exiting without consuming any CPU cycles whilst it waits for a SIGTERM from systemd droidcam-monitor.service
-echo $(date +"%T.%3N")" Droidcam-snd-manager: Creating named-pipes between app and monitor." >> $logfile
 if [ ! -p "/run/user/$User_ID/droidcam-snd-manager/droidcam_app_ctrl.pipe" ]; then mkfifo /run/user/$User_ID/droidcam-snd-manager/droidcam_app_ctrl.pipe; fi
 if [ ! -p "/run/user/$User_ID/droidcam-snd-manager/droidcam_man_ctrl.pipe" ]; then mkfifo /run/user/$User_ID/droidcam-snd-manager/droidcam_man_ctrl.pipe; fi
 if [ ! -f "/run/user/$User_ID/droidcam-snd-manager/log" ]; then touch /run/user/$User_ID/droidcam-snd-manager/log; fi
