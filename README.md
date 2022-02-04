@@ -72,6 +72,17 @@ I used a modprobe alias for the snd-aloop module, as this ensures that other con
 
 Having placed all the files in the correct place, with appropriate permissions; that is owned by the user for everything in user context and owned by root for the system level systemd service unit files and script, and with all .sh scripts executable.
 
+Initially we must ensure systemd has integrated the new unit files. This must be done in the user context of systemd and within the system context of systemd if you are using 'ALSA-snd-aloop-manager.service'.
+For droidcam-snd-manager run:
+```
+user@home:systemctl --user daemon-reload
+```
+and for 'ALSA-snd-aloop-manager.service run:
+```
+root@home:systemctl daemon-load
+```
+
+
 We should be able to start the ALSA-snd-aloop-manager service.
 ```
 root@home:systemctl start ALSA-snd-aloop-manager.service
