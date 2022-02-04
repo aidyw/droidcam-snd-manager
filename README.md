@@ -74,7 +74,7 @@ Having placed all the files in the correct place, with appropriate permissions; 
 
 Initially we must ensure systemd has integrated the new unit files. This must be done in the user context of systemd and within the system context of systemd if you are using 'ALSA-snd-aloop-manager.service'.
 
-For droidcam-snd-manager run:
+For 'droidcam-snd-manager.service' and the drop-in additions to Gnome's .desktop scope units run:
 ```
 user@home:systemctl --user daemon-reload
 ```
