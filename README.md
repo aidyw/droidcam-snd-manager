@@ -44,7 +44,10 @@ To allow the sequencing to take place as required the DroidCam .desktop file mus
 
 It should be noted that before starting DroidCam, If ‘droidcam-snd-manager.service’ requested and inserted the snd-aloop module, it attempts to remove any UDEV triggered card that appears automatically in PulseAudio when the snd-aloop module is inserted. As discussed this entry can be confusing without a specific PulseAudio profile-set and in fact is not necessary for functionality. We can still add a PulseAudio source without having PulseAudio attempt to manage the loopback ‘card’. This reduces the potential for misconfiguration both to DroidCam and indeed the ‘real’ Built-In sound card. Also when ‘ALSA-snd-aloop-manager.service’ inserts the snd-aloop module, it is created with only a single PCM sub-stream. This ensures that only DroidCam should attach to the snd-aloop module and we can be much more certain that the systemd service can successfully remove the snd-aloop module it inserted when DroidCam closes, as having only a single PCM channel should prevent other applications from binding to the module.
 
-It is possible to specifically specify the ALSA index number to use for DroidCam or ‘any’ to allow the module to be inserted at the next available index.
+It is possible to specifically specify the ALSA index number to use for DroidCam or ‘any’ to allow the module to be inserted at the next available index. This is done in the script called by the .desktop file:
+```
+~/.local/share/applications/droidcam.sh
+```
 
 If you would like to give it a try feel free. I have uploaded all the files in the directory structure that I have on my Ubuntu 20.04 LTS system. So you need to place each file onto your system in the same location unless your distro is different. If so, good luck. 
 
